@@ -3,22 +3,10 @@ layout: default
 title: Henyue's Timeline...
 ---
 <!doctype html>
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="themes/default/style.css">
-    </head>
-    <body>
-        <table border=0 height="480px" width="320px" align="center">
-            <tr>
-                <td align="top">
+
                     <p>最近更新：</p>
                     <ul>
                         {% for post in site.posts %}
                             <li>{{ post.date | date_to_string }} <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
                         {% endfor %}
                     </ul>
-                </td>
-            </tr>
-        </table>
-    </body>
-</html>
