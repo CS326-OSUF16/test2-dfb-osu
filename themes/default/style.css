@@ -13,12 +13,12 @@ BACKGROUND-ATTACHMENT: fixed;
 BACKGROUND-POSITION:left; }
 
 A {
-	COLOR: white; BORDER-BOTTOM: 1px dotted; TEXT-DECORATION: none
+	COLOR: blue; BORDER-BOTTOM: 1px dotted; TEXT-DECORATION: none
 }
-.A {COLOR: white; BORDER-BOTTOM: none; TEXT-DECORATION: none;FILTER: dropshadow(color=#000000, offx=1, offy=1, positive=1)}
+.A {COLOR: blue; BORDER-BOTTOM: none; TEXT-DECORATION: none;FILTER: dropshadow(color=#000000, offx=1, offy=1, positive=1)}
 
 TABLE {
-	FONT-SIZE: 9pt; COLOR: #DEDBEF; FONT-FAMILY: ËÎÌו, Verdana, sans-serif;
+	FONT-SIZE: 9pt; COLOR: black; FONT-FAMILY: ËÎÌו, Verdana, sans-serif;
 }
 
 INPUT {FONT-SIZE: 8pt; FONT-FAMILY: Verdana;background-color:transparent;color:#000000; border-bottom:1px solid #DEDBEF; border-top:none; border-left:none; border-right:none}
