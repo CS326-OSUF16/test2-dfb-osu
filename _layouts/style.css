@@ -1,0 +1,60 @@
+BODY {
+background-repeat: repeat;
+margin-left: 2px;
+margin-top: 2px;
+margin-right: 2px;
+margin-bottom: 2px;
+overflow-y: hidden;
+overflow-x: hidden;
+color: #000000;
+font-family: PMingLiu;
+font-size: 8pt;
+BACKGROUND-ATTACHMENT: fixed;
+BACKGROUND-POSITION:left; }
+
+A {
+	COLOR: white; BORDER-BOTTOM: 1px dotted; TEXT-DECORATION: none
+}
+.A {COLOR: white; BORDER-BOTTOM: none; TEXT-DECORATION: none;FILTER: dropshadow(color=#000000, offx=1, offy=1, positive=1)}
+
+TABLE {
+	FONT-SIZE: 9pt; COLOR: #DEDBEF; FONT-FAMILY: ËÎÌו, Verdana, sans-serif;
+}
+
+INPUT {FONT-SIZE: 8pt; FONT-FAMILY: Verdana;background-color:transparent;color:#000000; border-bottom:1px solid #DEDBEF; border-top:none; border-left:none; border-right:none}
+.INPUT2 {FONT-SIZE: 8pt; FONT-FAMILY: Verdana;background-color:transparent;color:#000000; border:none;}
+
+textarea {border:1px dotted #DEDBEF;background-color:transparent;font-size:9pt;font-family:PMingLiU;overflow-y: hidden;overflow-x: hidden;}
+
+.select {
+	border:none;
+	overflow:hidden;
+	display:inline-block;
+}
+Select {
+	position: relative;
+        background-color:#BAC5D9;
+	left:-3px;
+	top:-3px;
+	margin-right:-6px;
+	margin-bottom:-6px;
+}
+
+
+.font {
+FILTER: dropshadow(color=#999999, offx=1, offy=1, positive=1); FONT-FAMILY: "ËÎÌו"; FONT-SIZE: 9pt; width: 100%; COLOR: #000000;}
+
+.STYLE2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+.STYLE3 {
+font-family: ËÎÌו;
+font-size:12;
+color: #FFFFFF;}
+
+.touming {filter: alpha(opacity=70)}
+
+.code 
+{filter:alpha(opacity=70);font-family:Verdana,Courier,Courier New,mono;font-size:8pt; line-height:9pt;color:#000000;background-color:#ffffff;margin:none;width:95%;border:1px solid #000000;}
