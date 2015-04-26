@@ -8,3 +8,24 @@
 <div class="font">{{ content }}</div>
 </body>
 </html>
+
+<html>
+    <head>
+        <title>{{ page.title }}</title>
+        <link rel="stylesheet" type="text/css" href="themes/default/style.css">
+    </head>
+    <body>
+        <table border=0 height="480px" width="320px" align="center">
+            <tr>
+                <td>
+                    <a href="{{ site.baseurl }}">Home</a>
+                </td>
+            </tr>
+            <tr>
+                <td align="top">
+                    <div class="font">{{ content }}</div>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
