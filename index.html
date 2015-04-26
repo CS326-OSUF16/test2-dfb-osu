@@ -1,14 +1,23 @@
----
-layout: default
-title: Henyue's Timeline...
----
-
-<h2>{{ page.title }}</h2>
-<p>Latest Article</p>
-<ul>
-	{% for post in site.posts %}
-		<li>{{ post.date | date_to_string }} <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
-	{% endfor %}
-</ul>
-
-{{site.related_posts}}
+<!doctype html>
+<html ng-app>
+    <head>
+        <style type="text/css">td img {display: block;}</style>
+    </head>
+    <body>
+        <table border=0 height="480px">
+            <tr>
+                <td width="320px">
+                    <iframe name="log" src="main.html" width="483" height="253" marginwidth="0" marginheight="0" frameborder="0" scrolling=auto />
+                </td>
+                <td width="150px">
+                    <p>Latest Article</p>
+                    <ul>
+                        {% for post in site.posts %}
+                            <li>{{ post.date | date_to_string }} <a href="{{ site.baseurl }}{{ post.url }}" target="log">{{ post.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
