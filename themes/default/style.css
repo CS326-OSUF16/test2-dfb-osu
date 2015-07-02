@@ -18,13 +18,13 @@ A {
 .A {COLOR: blue; BORDER-BOTTOM: none; TEXT-DECORATION: none;FILTER: dropshadow(color=#000000, offx=1, offy=1, positive=1)}
 
 TABLE {
-	FONT-SIZE: 9pt; COLOR: black; FONT-FAMILY: ËÎÌå, Verdana, sans-serif;
+	FONT-SIZE: 9pt; COLOR: black; FONT-FAMILY: "Microsoft Yahei", ËÎÌå, Verdana, sans-serif;
 }
 
-INPUT {FONT-SIZE: 8pt; FONT-FAMILY: Verdana;background-color:transparent;color:#000000; border-bottom:1px solid #DEDBEF; border-top:none; border-left:none; border-right:none}
-.INPUT2 {FONT-SIZE: 8pt; FONT-FAMILY: Verdana;background-color:transparent;color:#000000; border:none;}
+INPUT {FONT-SIZE: 8pt; FONT-FAMILY: "Microsoft Yahei";background-color:transparent;color:#000000; border-bottom:1px solid #DEDBEF; border-top:none; border-left:none; border-right:none}
+.INPUT2 {FONT-SIZE: 8pt; FONT-FAMILY: "Microsoft Yahei";background-color:transparent;color:#000000; border:none;}
 
-textarea {border:1px dotted #DEDBEF;background-color:transparent;font-size:9pt;font-family:PMingLiU;overflow-y: hidden;overflow-x: hidden;}
+textarea {border:1px dotted #DEDBEF;background-color:transparent;font-size:9pt;font-family:"Microsoft Yahei";overflow-y: hidden;overflow-x: hidden;}
 
 .select {
 	border:none;
@@ -42,7 +42,7 @@ Select {
 
 
 .font {
-FILTER: dropshadow(color=#999999, offx=1, offy=1, positive=1); FONT-FAMILY: "ËÎÌå"; FONT-SIZE: 9pt; width: 100%; COLOR: #000000;}
+FILTER: dropshadow(color=#999999, offx=1, offy=1, positive=1); FONT-FAMILY: "Microsoft Yahei"; FONT-SIZE: 9pt; width: 100%; COLOR: #000000;}
 
 .STYLE2 {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
