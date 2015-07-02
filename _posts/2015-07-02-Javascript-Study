@@ -1,0 +1,7 @@
+---
+layout: default
+title: Javascript Study
+---
+<h2>{{ page.title }}</h2>
+<p>找到《Javascript忍者的秘密》pdf，但是没地上传，公司down不到，迟点check in到这里吧囧</p>
+<p>{{ page.date | date_to_string }}</p>
