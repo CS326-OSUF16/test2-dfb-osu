@@ -33,6 +33,19 @@ textarea {
 	overflow-x: hidden;*/
 }
 
+
+.commandline {
+	color:#00FF00;
+	background-color:black;
+	padding: 5px; 
+	box-shadow: 3px 3px 2px #999999;
+}
+
+.screenshot {
+	border: 1px dotted #999999;
+	box-shadow: 3px 3px 2px #999999;
+}
+
 .select {
 	border:none;
 	overflow:hidden;

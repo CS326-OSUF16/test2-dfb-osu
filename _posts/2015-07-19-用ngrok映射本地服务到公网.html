@@ -1,0 +1,22 @@
+---
+layout: default
+title: 用ngrok映射本地服务到公网
+---
+<h2>{{ page.title }}</h2>
+<p>折腾了大半天花生壳，路由设置登录都OK，就是无法解析域名IP，没办法，只好放弃找其他的解决方案。</p>
+<p>然后是找到ngrok，很多做微信开发的Developer都在用，好处是小巧不占资源，缺点是服务器在国外，由于河蟹的缘故，经常要自备扶梯准备过墙。</p>
+<p>用法比较简单，留个Guideline吧：</p>
+<ol>
+	<li>到<a href="https://www.ngrok.com" target="_blank">ngrok官网</a>下载客户端；</li>
+	<li>注册用户，只有注册用户才能绑定自定义二级域名；</li>
+	<li>注册成功后执行以下命令将authentoken导入：<br/>
+		<pre class="commandline" style="width:400px">ngrok authtoken 你的authentoken</pre>
+	</li>
+	<li>在<a href='http://www.tunnel.mobi' target="_blank">www.tunnel.mobi</a>下载ngrok.cfg文件<sup><a href="https://ngrokd.b0.upaiyun.com/ngrok.cfg" title="右键另存为...">[↓]</a></sup>，放到ngrok.exe同级目录；
+	<li>将本地8080端口绑定域名发布如下：<br/>
+		<pre class="commandline" style="width:400px">ngrok -config=ngrok.cfg -subdomain kong 8080</pre>
+	</li>
+	<li>最后打开浏览器访问<a href="http://kong.tunnel.mobi">http://kong.tunnel.mobi</a>，测试成功！<br/>
+		<img class="screenshot" src="\jekyll_demo\images\20150719-ngrok.png" /></li>
+</ol>
+<p>{{ page.date | date_to_string }}</p>
