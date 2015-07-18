@@ -4,7 +4,7 @@ margin-left: 2px;
 margin-top: 2px;
 margin-right: 2px;
 margin-bottom: 2px;
-overflow-y: hidden;
+/*overflow-y: hidden;*/
 overflow-x: hidden;
 color: #000000;
 font-family: "Microsoft Yahei";
@@ -24,7 +24,14 @@ TABLE {
 INPUT {FONT-SIZE: 8pt; FONT-FAMILY: "Microsoft Yahei";background-color:transparent;color:#000000; border-bottom:1px solid #DEDBEF; border-top:none; border-left:none; border-right:none}
 .INPUT2 {FONT-SIZE: 8pt; FONT-FAMILY: "Microsoft Yahei";background-color:transparent;color:#000000; border:none;}
 
-textarea {border:1px dotted #DEDBEF;background-color:transparent;font-size:9pt;font-family:"Microsoft Yahei";overflow-y: hidden;overflow-x: hidden;}
+textarea {
+	border:1px dotted #DEDBEF;
+	background-color:transparent;
+	font-size:9pt;
+	font-family:"Microsoft Yahei";
+	/*overflow-y: hidden;
+	overflow-x: hidden;*/
+}
 
 .select {
 	border:none;
