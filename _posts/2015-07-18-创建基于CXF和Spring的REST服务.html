@@ -1,0 +1,207 @@
+---
+layout: default
+title: Javascript Study
+---
+<style>
+textarea {
+	width:750px;
+	resize:none;
+	background-color:rgb(235, 235, 228)
+}
+</style>
+<h2>{{ page.title }}</h2>
+<ol>
+	<li>首先用IntelliJ创建一个Maven项目，得到最简单的项目POM配置。</li>
+	<li>
+		接着手动给项目加上Spring，CXF，Logging等的依赖关系，以及jetty-maven-plugin的支持，如下：<br/>
+		<textarea rows=10>
+    <properties>
+        <spring.version>4.0.0.RELEASE</spring.version>
+        <cxf.version>2.4.4</cxf.version>
+        <servlet-api.version>3.0.1</servlet-api.version>
+        <aspectj.version>1.7.4</aspectj.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjweaver</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+
+        <!-- CXF -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>8.1.16.v20140903</version>
+                    <configuration>
+                        <webAppConfig>
+                            <contextPath>/</contextPath>
+                        </webAppConfig>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+		</textarea><br/>
+		此时已经成功为项目添加了REST所需的框架基础。
+	</li>
+	<li>
+		毕竟这是个Web项目，但是作为一个装逼的程序猿，我要把web.xml藏起来显得自己高深，这也是为什么在上面的步骤会引入了3.0.1版本的servlet-api。<br/>
+		用Java代码创建一个Sevlet的初始化入口：<br/>
+		<textarea rows=10>
+/**
+ * Created by Kong on 2015/7/18.
+ */
+public class CxfServletInitializer implements WebApplicationInitializer {
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        ServletRegistration.Dynamic cxfServlet = servletContext.addServlet("cxfServlet", new CXFServlet());
+        cxfServlet.setLoadOnStartup(1);
+        cxfServlet.addMapping("/rest/*");
+    }
+}
+		</textarea><br/>
+		以及一个读取Spring applicationContext的ServletContext：<br/>
+		<textarea rows=10>
+/**
+ * Created by Kong on 2015/3/16.
+ */
+public class CustomSpringWebAppInitializer implements WebApplicationInitializer {
+
+    public void onStartup(ServletContext servletContext) {
+        XmlWebApplicationContext xmlWebAppCtx = new XmlWebApplicationContext();
+        xmlWebAppCtx.setConfigLocation("classpath*:applicationContext.xml");
+        xmlWebAppCtx.setServletContext(servletContext);
+
+        servletContext.addListener(new ContextLoaderListener(xmlWebAppCtx));
+        servletContext.addListener(new RequestContextListener());
+    }
+
+}
+		</textarea>
+	</li>
+	<li>
+		接着让我们荡起双桨，添加Spring所需的applicationContext文件：<br/>
+		<textarea rows=10>
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd" >
+
+    <context:annotation-config />
+    <context:spring-configured />
+
+    <context:component-scan base-package="in.iask.kong" />
+
+    <import resource="classpath*:spring/*.xml" />
+
+</beans>
+		</textarea><br/>
+		并创建cxf.xml另外放在spring目录下便于单独管理：<br/>
+		<textarea rows=10>
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cxf.apache.org/jaxrs
+                           http://cxf.apache.org/schemas/jaxrs.xsd" >
+
+    <!-- import the cxf initial xml from cxf-rt-core.jar and cxf-rt-transports-http.jar -->
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+    <jaxrs:server>
+        <jaxrs:serviceBeans>
+            <ref bean="testService" />
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
+
+</beans>
+		</textarea>
+	</li>
+	<li>
+		终于到最后一步了，创建TestService的class：<br/>
+		<textarea rows=10>
+/**
+ * Created by Kong on 2015/7/18.
+ */
+@Service
+@Path("/test")
+@Produces(MediaType.APPLICATION_JSON)
+public class TestService {
+
+    @GET
+    @Path("/hello/{name}")
+    public String sayHello(@PathParam("name") @NotNull final String name) {
+        return "Hello, " + name;
+    }
+}
+		</textarea>
+	</li>
+	<li>
+		大功告成，赶紧用Maven执行jetty:run来看看效果！<br/>
+		<img src="\jekyll_demo\images\20150718-TestResult.png" />
+	</li>
+</ol>
+<p>{{ page.date | date_to_string }}</p>
