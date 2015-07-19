@@ -18,7 +18,7 @@ Caused by: com.sun.istack.SAXParseException2; lineNumber: 1; columnNumber: 2; un
 	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext.handleEvent(UnmarshallingContext.java:662)
 </pre>
 <p>开始不明所以，问度娘，度娘答非所问，只好爬墙问谷哥，结果出来个啥给body参数加上@WebParam的怪招，还是解决不到我的问题。最后自己静下心来仔细看了看代码，好吧，我的XMLElementRoot的name写得不对，错误信息提示了是“xml”，我的是默认文件名，改成下面的结构后，测试通过。</p>
-<pre>
+<pre class="commandline">
 package in.iask.kong.obj;
 
 import javax.xml.bind.annotation.XmlRootElement;
