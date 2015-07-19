@@ -1,0 +1,30 @@
+---
+layout: default
+title: AES加密时抛出java.security.InvalidKeyException: Illegal key size or default parameter
+---
+
+<h2>{{ page.title }}</h2>
+<p>使用AES加密时，当密钥大于128时，代码会抛出</p>
+<pre class="commandline">
+java.security.InvalidKeyException: Illegal key size
+	at javax.crypto.Cipher.checkCryptoPerm(Cipher.java:1024)
+	at javax.crypto.Cipher.implInit(Cipher.java:790)
+	at javax.crypto.Cipher.chooseProvider(Cipher.java:849)
+	at javax.crypto.Cipher.init(Cipher.java:1348)
+	at javax.crypto.Cipher.init(Cipher.java:1282)
+	...
+</pre>
+
+<p>Illegal key size or default parameters是指密钥长度是受限制的，java运行时环境读到的是受限的policy文件。文件位于${java_home}/jre/lib/security </p>
+
+<p>这种限制是因为美国对软件出口的控制。 </p>
+
+
+<p>解决办法：</p>
+
+<p>去掉这种限制需要下载Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files.网址如下：</p>
+<p>JDK7:	<a href="http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html">http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html</a></p>
+
+<p>下载包的readme.txt 有安装说明。就是替换${java_home}/jre/lib/security/ 下面的local_policy.jar和US_export_policy.jar 
+</p>
+<p>{{ page.date | date_to_string }}</p>
