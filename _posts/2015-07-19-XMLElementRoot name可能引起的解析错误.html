@@ -1,0 +1,40 @@
+---
+layout: default
+title: XMLElementRoot Name可能引起的解析错误
+---
+
+<h2>{{ page.title }}</h2>
+<p>在处理REST的XML请求时遇到这么个错误：</p>
+<pre class="commandline">
+18:47:26,538 DEBUG WebApplicationExceptionMapper:77 - unexpected element (uri:"", local:"xml"). Expected elements are <{}>
+javax.ws.rs.WebApplicationException: com.sun.istack.SAXParseException2; lineNumber: 1; columnNumber: 2; unexpected element (uri:"", local:"xml"). Expected elements are <{}>
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.handleJAXBException(AbstractJAXBProvider.java:549)
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.readFrom(JAXBElementProvider.java:167)
+	at org.apache.cxf.jaxrs.utils.JAXRSUtils.readFromMessageBody(JAXRSUtils.java:1032)
+	...
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:543)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: com.sun.istack.SAXParseException2; lineNumber: 1; columnNumber: 2; unexpected element (uri:"", local:"xml"). Expected elements are <{}>
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallingContext.handleEvent(UnmarshallingContext.java:662)
+</pre>
+<p>开始不明所以，问度娘，度娘答非所问，只好爬墙问谷哥，结果出来个啥给body参数加上@WebParam的怪招，还是解决不到我的问题。最后自己静下心来仔细看了看代码，好吧，我的XMLElementRoot的name写得不对，错误信息提示了是“xml”，我的是默认文件名，改成下面的结构后，测试通过。</p>
+<pre>
+package in.iask.kong.obj;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Created by Kong on 2015/7/19.
+ */
+<span style="color:yellow"><s>@XmlRootElement</s>
+@XmlRootElement(name="xml")</span>
+public class WxMessage {
+    private String ToUserName;
+    private String FromUserName;
+    private long CreateTime;
+    private String MsgType;
+    private String Content;
+    private long MsgId;
+    ...
+</pre>
+<p>{{ page.date | date_to_string }}</p>
