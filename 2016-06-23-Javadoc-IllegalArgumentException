@@ -1,0 +1,66 @@
+---
+layout: default
+title: 解决用javadoc创建archive时的IllegalArgumentException
+---
+<style>
+textarea {
+	width:750px;
+	resize:none;
+	background-color:rgb(235, 235, 228)
+}
+</style>
+<h2>{{ page.title }}</h2>
+		在用2.8.1的maven-javadoc-plugin调用到javadoc时，报了如下错误：<br/>
+		<textarea rows=10>
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-javadoc-plugin:2.8.1:jar (attach-javadocs) on project sspc-implementation: MavenReportException: Error while creating archive:
+[ERROR] Exit code: 1 - java.lang.IllegalArgumentException
+[ERROR] at sun.net.www.ParseUtil.decode(ParseUtil.java:202)
+[ERROR] at sun.misc.URLClassPath$FileLoader.<init>(URLClassPath.java:1039)
+[ERROR] at sun.misc.URLClassPath$3.run(URLClassPath.java:361)
+[ERROR] at sun.misc.URLClassPath$3.run(URLClassPath.java:356)
+[ERROR] at java.security.AccessController.doPrivileged(Native Method)
+[ERROR] at sun.misc.URLClassPath.getLoader(URLClassPath.java:355)
+[ERROR] at sun.misc.URLClassPath.getLoader(URLClassPath.java:332)
+[ERROR] at sun.misc.URLClassPath.findResource(URLClassPath.java:175)
+[ERROR] at java.net.URLClassLoader$2.run(URLClassLoader.java:551)
+[ERROR] at java.net.URLClassLoader$2.run(URLClassLoader.java:549)
+[ERROR] at java.security.AccessController.doPrivileged(Native Method)
+[ERROR] at java.net.URLClassLoader.findResource(URLClassLoader.java:548)
+[ERROR] at java.lang.ClassLoader.getResource(ClassLoader.java:1147)
+[ERROR] at java.net.URLClassLoader.getResourceAsStream(URLClassLoader.java:227)
+[ERROR] at javax.xml.parsers.SecuritySupport$4.run(SecuritySupport.java:94)
+[ERROR] at java.security.AccessController.doPrivileged(Native Method)
+[ERROR] at javax.xml.parsers.SecuritySupport.getResourceAsStream(SecuritySupport.java:87)
+[ERROR] at javax.xml.parsers.FactoryFinder.findJarServiceProvider(FactoryFinder.java:283)
+
+...
+
+[ERROR] at java.lang.reflect.Method.invoke(Method.java:606)
+[ERROR] at com.sun.tools.javadoc.DocletInvoker.invoke(DocletInvoker.java:280)
+[ERROR] at com.sun.tools.javadoc.DocletInvoker.start(DocletInvoker.java:160)
+[ERROR] at com.sun.tools.javadoc.Start.parseAndExecute(Start.java:397)
+[ERROR] at com.sun.tools.javadoc.Start.begin(Start.java:167)
+[ERROR] at com.sun.tools.javadoc.Main.execute(Main.java:59)
+[ERROR] at com.sun.tools.javadoc.Main.main(Main.java:49)
+[ERROR]
+[ERROR] Command line was: C:\jdk1.7.0_67\jre\..\bin\javadoc.exe -J-Dhttp.proxySet=true -J-Dhttp.proxyHost=hubproxy.sh.cn.ao.ericsson.se -J-Dhttp.proxyPort=8080 "-J-Dhttp.nonProxyHosts=\"*.sh.cn.ao.ericsson.se\"" @options @argfile
+[ERROR]
+[ERROR] Refer to the generated Javadoc files in 'F:\ecanzho\Workspaces\SEP\ddi_iot_msdp\msdp\api\sspc\sspc-implementation\target\javadoc' dir.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+[ERROR]
+[ERROR] After correcting the problems, you can resume the build with the command
+
+[ERROR]   mvn <goals> -rf :sspc-implementation
+		</textarea><br/>
+		我是在命令行直接跑的maven，所以直接从环境变量找原因，发现是因为公司的系统环境变量%CLASSPATH%的原因，于是直接在执行maven命令之前先把%CLASSPATH%给清空了<br/>
+		<textarea rows=5>
+set classpath=
+    </textarea><br/>
+    解决问题，build success，命令行的set classpath仅在该cmd窗口有效，所以也没啥后遗症。
+<p>{{ page.date | date_to_string }}</p>
