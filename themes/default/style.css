@@ -39,6 +39,8 @@ textarea {
 	background-color:black;
 	padding: 5px; 
 	box-shadow: 3px 3px 2px #999999;
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
 
 .screenshot {
