@@ -1,0 +1,30 @@
+---
+layout: default
+title: 通过SSH从另一台linux server上下载文件
+---
+<style>
+textarea {
+	width:750px;
+	resize:none;
+	background-color:rgb(235, 235, 228)
+}
+</style>
+<h2>{{ page.title }}</h2>
+		场景：当前用SSH登陆了server1,需要从server2上复制一个文件到server1，最蠢而直接的办法是先从server2上sftp下载该文件，然后上传至server1。但是当文件体积过大时，此操作十分浪费时间。<br/>
+		解决方法：用scp命令直接从server2上copy该文件如下<br/>
+		<textarea rows=2>
+-bash-4.1$ scp hudson@ecnshlx3087:/data/dispatcher/workspace/dp-msdp-maven/cm/build/msdp.tar.gz /home_local/drutt/ecanzho/
+		</textarea><br/>
+		用法如下，详细介绍可man scp查看：<br/>
+	  <textarea rows=10>
+NAME
+     scp - secure copy (remote file copy program)
+
+SYNOPSIS
+     scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file]
+         [-l limit] [-o ssh_option] [-P port] [-S program]
+         [[user@]host1:]file1 ... [[user@]host2:]file2
+    </textarea>
+    
+
+<p>{{ page.date | date_to_string }}</p>
