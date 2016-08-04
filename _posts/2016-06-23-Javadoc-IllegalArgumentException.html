@@ -2,16 +2,9 @@
 layout: default
 title: 解决用javadoc创建archive时的IllegalArgumentException
 ---
-<style>
-textarea {
-	width:750px;
-	resize:none;
-	background-color:rgb(235, 235, 228)
-}
-</style>
 <h2>{{ page.title }}</h2>
 		在用2.8.1的maven-javadoc-plugin调用到javadoc时，报了如下错误：<br/>
-		<textarea rows=10>
+		<pre class="commandline" style="width:400px;height:400px">
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-javadoc-plugin:2.8.1:jar (attach-javadocs) on project sspc-implementation: MavenReportException: Error while creating archive:
 [ERROR] Exit code: 1 - java.lang.IllegalArgumentException
 [ERROR] at sun.net.www.ParseUtil.decode(ParseUtil.java:202)
@@ -57,10 +50,10 @@ textarea {
 [ERROR] After correcting the problems, you can resume the build with the command
 
 [ERROR]   mvn <goals> -rf :sspc-implementation
-		</textarea><br/>
+		</pre><br/>
 		我是在命令行直接跑的maven，所以直接从环境变量找原因，发现是因为公司的系统环境变量%CLASSPATH%的原因，于是直接在执行maven命令之前先把%CLASSPATH%给清空了<br/>
-		<textarea rows=5>
+		<pre class="commandline" style="width:400px">
 set classpath=
-    </textarea><br/>
+    </pre><br/>
     解决问题，build success，命令行的set classpath仅在该cmd窗口有效，所以也没啥后遗症。
 <p>{{ page.date | date_to_string }}</p>
