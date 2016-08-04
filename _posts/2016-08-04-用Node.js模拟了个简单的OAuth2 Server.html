@@ -2,10 +2,17 @@
 layout: default
 title: 用Node.js模拟了个简单的OAuth2 Server
 ---
+<style>
+textarea {
+	width:750px;
+	resize:none;
+	background-color:rgb(235, 235, 228)
+}
+</style>
 <h2>{{ page.title }}</h2>
 		主要是熟悉下Node.js的简单应用，简单的js，没有用到npm插件。<br/>
 		代码如下：<br/>
-		<pre class="commandline" style="width:400px">
+		<textarea rows=69>
 var http = require('http');	//引入http组件
 var fs = require('fs');		//引入fs（FileSystem）组件
 var url = require('url');	//引入url组件
@@ -75,7 +82,7 @@ http.createServer(function(request, response) {
 }).listen(5555);
 
 console.log('Server running at port 5555');
-		</pre>
+		</textarea>
     
 
 <p>{{ page.date | date_to_string }}</p>
