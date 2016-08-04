@@ -1,0 +1,81 @@
+---
+layout: default
+title: 用Node.js模拟了个简单的OAuth2 Server
+---
+<h2>{{ page.title }}</h2>
+		主要是熟悉下Node.js的简单应用，简单的js，没有用到npm插件。<br/>
+		代码如下：<br/>
+		<pre class="commandline" style="width:400px">
+var http = require('http');	//引入http组件
+var fs = require('fs');		//引入fs（FileSystem）组件
+var url = require('url');	//引入url组件
+
+var write404Error = function (response) {
+	response.writeHead(404, {'Content-Type': 'text/html'});
+	response.end();
+};
+
+var readFile = function(fileName, response) {
+	fs.readFile(fileName, function(err, data) {
+		if (err) {
+			console.log(err);
+			write404Error(response);
+		} else {
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			response.write(data.toString());
+	response.end();
+		}	
+	});
+};
+
+http.createServer(function(request, response) {
+	var pathname = url.parse(request.url).pathname;
+	var params = url.parse(request.url, true).query;
+	console.log("Request for " + pathname + " received.");
+	console.log("Params: " + params);
+
+	var subPathStrs = pathname.split("/");
+
+	if (subPathStrs[1] === ("auth")) {
+		if (subPathStrs[2] === "oauth2") {
+			if (subPathStrs[3] === "authz.do") {
+				console.log("client_id=" + params.client_id + ", redirect_uri=" + params.redirect_uri + ", response_type=" + params.response_type);
+				var respHtml = "<html>";
+				var loginHead = "<script>function allowAccess() {window.location='" + params.redirect_uri + "?code=msdp';}\n";
+				loginHead += "function denyAccess() {window.location='/authorizeError';}</script>";
+				respHtml += loginHead;
+				respHtml += "<h3>The app \"<b style='color:red'>" + params.client_id + "</b>\" would like to connect to your account.</h3><br/>"
+				respHtml += '<p><h5>Allow <b style="color:red">' + params.client_id + '</b> access?</h5></p>';
+				respHtml += '<input type="submit" value="Deny" onclick="denyAccess()" />&nbsp;<input type="submit" value="Allow" onclick="allowAccess()" /></body></html>';
+				response.writeHead(200, {'Content-Type': 'text/html'});
+				response.write(respHtml);
+				response.end();
+			} else if (subPathStrs[3] == "token.do") {
+				response.writeHead(200, {'Content-Type': "application/json"});
+				response.write('{"access_token":"e72e16c7e42f292c6912e7710c838347ae178b4a", "scope":"test", "token_type":"bearer", "expires_in": 30}');
+				response.end();
+			} else {
+				write404Error(response);
+			}
+		} else {
+			write404Error(response);
+		}
+	} else if (subPathStrs[1] === ("favicon.ico")) {
+		readFile(pathname, response);
+	} else if (subPathStrs[1] === "account") {
+		response.writeHead(200, {'Content-Type': "application/json"});
+		response.write('{"uid": "UF-00000000000001", "playAccountList": [{"customerNumber":"123456"}, {"customerNumber":"jjjkkkjj"}]}');
+		response.end();
+	} else {
+		response.writeHead(403, {'Content-Type': 'text/html'});
+		response.write("Can only access resources under context '/auth'.");
+		response.end();
+	}
+
+}).listen(5555);
+
+console.log('Server running at port 5555');
+		</pre>
+    
+
+<p>{{ page.date | date_to_string }}</p>
