@@ -4,6 +4,11 @@ title: Henyue's Timeline...
 ---
 <!doctype html>
 
+<p>标签分类：</p>
+{% for tag in page.tags %}
+{{tag}} 
+{%endfor%}
+
 <p>最近更新：</p>
 <ul>
     {% for post in site.posts %}
