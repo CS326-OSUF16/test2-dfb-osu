@@ -6,7 +6,7 @@ title: Henyue's Timeline...
 
 <p>标签分类：</p>
 {% for tag in site.tags %}
-{{tag}} 
+{{tag | first}} 
 {%endfor%}
 
 <p>最近更新：</p>
