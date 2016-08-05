@@ -6,7 +6,9 @@ title: Henyue's Timeline...
 
 <p>标签分类：</p>
 {% for tag in site.tags %}
-{{tag | first}} 
+    {% assign tagName = tag | first %}
+    {% assign tagPosts = tag | last %}
+{{tagName}}({{tagPosts.size}}) 
 {%endfor%}
 
 <p>最近更新：</p>
