@@ -1,0 +1,30 @@
+---
+layout: default
+title: Maven配置备忘Tips
+---
+<style>
+<h2>{{ page.title }}</h2>
+    现在的项目基本上都是用Maven做依赖管理，或许之后会编程Gradle吧，但目前Maven是毫无争议的主流，一个项目下来，用到各种Maven插件，仅仅浮于看懂果然远远不够，不止一次遇到同样的配置问题了，每次都是问Google，StackOverflow，有必要记录一下了。<br/>
+<hr/>
+<h1>Maven的预定义属性</h1>
+    Maven可以自定义全局属性，但其实也有许多的预定义属性可以直接拿来用，譬如：<br/>
+<ul>
+    <li>project.build.sourceDirectory
+    <li>project.build.scriptSourceDirectory
+    <li>project.build.testSourceDirectory
+    <li>project.build.outputDirectory
+    <li>project.build.testOutputDirectory
+    <li>project.build.directory
+</ul>
+    这些属性可以帮助你不在pom文件中hardcode文件路径，使得配置更加灵活。<br/>
+    更多介绍可以参考这篇文档 <a href="http://books.sonatype.com/mvnref-book/reference/resource-filtering-sect-properties.html" target="_blank" title="Maven: The Complete Reference - 9.2. Maven Properties">Maven: The Complete Reference - 9.2. Maven Properties</a><br/>
+<hr/>
+<h1>Maven的生命周期</h1>
+    Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
+<ul>
+	<li>default Lifecycle
+	<li>clean Lifecycle
+	<li>site Lifecycle
+</ul>
+    每个周期分成了许多的phase，这些phase基本上是循序渐进的，具体的顺序可以参考Maven的官方文档<a href="http://maven.apache.org/ref/3.3.9/maven-core/lifecycles.html" title="Maven生命周期官方说明" target="_blank">Lifecycles Reference</a>。<br/>
+
