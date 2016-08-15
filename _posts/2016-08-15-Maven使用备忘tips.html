@@ -37,7 +37,7 @@ Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
 <hr/>
 <h1>maven-dependency-plugin</h1>
 当你有几个module依赖于同一份parent的pom文件，且共用同一堆依赖jar文件时，你可能希望这几个module打包出来的war或者jar不包含这些依赖文件，而只是共用shareLibrary来调用这些依赖包。这时我们需要将其中的依赖包全部导出到某一个lib文件夹备用：
-<textarea row=20>
+<textarea rows=20>
 <!-- Copy dependencies into lib folder -->
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
