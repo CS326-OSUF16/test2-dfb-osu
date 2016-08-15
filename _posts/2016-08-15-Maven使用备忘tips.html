@@ -3,6 +3,13 @@ layout: default
 title: Maven配置备忘Tips
 tags: Maven
 ---
+<style>
+textarea {
+	width:750px;
+	resize:none;
+	background-color:rgb(235, 235, 228)
+}
+</style>
 <h2>{{ page.title }}</h2>
 现在的项目基本上都是用Maven做依赖管理，或许之后会编程Gradle吧，但目前Maven是毫无争议的主流，一个项目下来，用到各种Maven插件，仅仅浮于看懂果然远远不够，不止一次遇到同样的配置问题了，每次都是问Google，StackOverflow，有必要记录一下了。<br/>
 <hr/>
@@ -30,7 +37,7 @@ Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
 <hr/>
 <h1>maven-dependency-plugin</h1>
 当你有几个module依赖于同一份parent的pom文件，且共用同一堆依赖jar文件时，你可能希望这几个module打包出来的war或者jar不包含这些依赖文件，而只是共用shareLibrary来调用这些依赖包。这时我们需要将其中的依赖包全部导出到某一个lib文件夹备用：
-<pre class="commandline" style="width:400px">
+<textarea row=20>
 <!-- Copy dependencies into lib folder -->
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
@@ -48,5 +55,5 @@ Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
 		<outputDirectory>${project.build.directory}/lib</outputDirectory>
 	</configuration>
 </plugin>
-</pre>
+</textarea>
 
