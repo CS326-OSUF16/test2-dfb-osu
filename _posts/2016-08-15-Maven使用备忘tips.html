@@ -13,7 +13,7 @@ textarea {
 <h2>{{ page.title }}</h2>
 现在的项目基本上都是用Maven做依赖管理，或许之后会编程Gradle吧，但目前Maven是毫无争议的主流，一个项目下来，用到各种Maven插件，仅仅浮于看懂果然远远不够，不止一次遇到同样的配置问题了，每次都是问Google，StackOverflow，有必要记录一下了。<br/>
 <hr/>
-<h1>Maven的预定义属性</h1>
+<h3>Maven的预定义属性</h3>
 Maven可以自定义全局属性，但其实也有许多的预定义属性可以直接拿来用，譬如：<br/>
 <ul>
     <li>project.build.sourceDirectory
@@ -26,7 +26,7 @@ Maven可以自定义全局属性，但其实也有许多的预定义属性可以
 这些属性可以帮助你不在pom文件中hardcode文件路径，使得配置更加灵活。<br/>
 更多介绍可以参考这篇文档 <a href="http://books.sonatype.com/mvnref-book/reference/resource-filtering-sect-properties.html" target="_blank" title="Maven: The Complete Reference - 9.2. Maven Properties">Maven: The Complete Reference - 9.2. Maven Properties</a><br/>
 <hr/>
-<h1>Maven的生命周期</h1>
+<h3>Maven的生命周期</h3>
 Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
 <ul>
 	<li>default Lifecycle
@@ -35,9 +35,9 @@ Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
 </ul>
 每个周期分成了许多的phase，这些phase基本上是循序渐进的，具体的顺序可以参考Maven的官方文档<a href="http://maven.apache.org/ref/3.3.9/maven-core/lifecycles.html" title="Maven生命周期官方说明" target="_blank">Lifecycles Reference</a>。<br/>
 <hr/>
-<h1>maven-dependency-plugin</h1>
+<h3>maven-dependency-plugin</h3>
 当你有几个module依赖于同一份parent的pom文件，且共用同一堆依赖jar文件时，你可能希望这几个module打包出来的war或者jar不包含这些依赖文件，而只是共用shareLibrary来调用这些依赖包。这时我们需要将其中的依赖包全部导出到某一个lib文件夹备用：
-<textarea rows=20>
+<textarea rows=17>
 <!-- Copy dependencies into lib folder -->
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
@@ -56,4 +56,28 @@ Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
 	</configuration>
 </plugin>
 </textarea>
-
+<hr/>
+<h3>properties-maven-plugin</h3>
+如果某Maven项目配置pom时需要从外部properties文件中读取属性，可以用这个插件：<br/>
+<textarea rows=19>
+            <!-- read properties -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>src/main/resources/user-export.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+</textarea>
+当然该插件不仅仅是能读取外部properties，还可以写properties和system properties等，可参考<a href="http://www.mojohaus.org/properties-maven-plugin/" target="_blank">官方指引</a>。</br>
