@@ -11,7 +11,7 @@ textarea {
 }
 </style>
 <h2>{{ page.title }}</h2>
-现在的项目基本上都是用Maven做依赖管理，或许之后会编程Gradle吧，但目前Maven是毫无争议的主流，一个项目下来，用到各种Maven插件，仅仅浮于看懂果然远远不够，不止一次遇到同样的配置问题了，每次都是问Google，StackOverflow，有必要记录一下了。<br/>
+现在的项目基本上都是用Maven做依赖管理，或许之后会编程Gradle吧，但目前Maven是毫无争议的主流，一个项目下来，用到<a href="http://maven.apache.org/plugins/index.html" target="_blank">各种Maven插件</a>，仅仅浮于看懂果然远远不够，不止一次遇到同样的配置问题了，每次都是问Google，StackOverflow，有必要记录一下了。<br/>
 <hr/>
 <h3>Maven的预定义属性</h3>
 Maven可以自定义全局属性，但其实也有许多的预定义属性可以直接拿来用，譬如：<br/>
@@ -81,3 +81,141 @@ Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
             </plugin>
 </textarea>
 当然该插件不仅仅是能读取外部properties，还可以写properties和system properties等，可参考<a href="http://www.mojohaus.org/properties-maven-plugin/" target="_blank">官方指引</a>。</br>
+<hr/>
+<h3>maven-assembly-plugin</h3>
+Maven-assembly-plugin(<a href="http://maven.apache.org/plugins/maven-assembly-plugin/" target="_blank">官网</a>)这个插件通常用来做打包相关的工作，这里附上一个自己的使用场景：<br/>
+pom.xml<br/>
+<textarea rows=17>
+<plugin>
+	<artifactId>maven-assembly-plugin</artifactId>
+	<configuration>
+		<finalName>${project.name}-${project.version}-release</finalName>
+		<descriptors>
+			<descriptor>${project.basedir}/assembly/package.xml</descriptor>
+		</descriptors>
+		<appendAssemblyId>false</appendAssemblyId>
+	</configuration>
+	<executions>
+		<execution>
+			<id>make-assembly</id>
+			<phase>package</phase>
+			<goals>
+				<goal>single</goal>
+			</goals>
+		</execution>
+	</executions>
+</plugin>
+</textarea>
+package.xml<br/>
+<textarea rows=35>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3
+                              http://maven.apache.org/xsd/assembly-1.1.3.xsd">
+    <id/>
+    <formats>
+		<!--分别输出为tar.gz和zip两种格式的打包，内容一样-->
+        <format>tar.gz</format>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>assembly</directory>
+            <excludes>
+                <exclude>initial.sh</exclude>
+                <exclude>package.xml</exclude>
+            </excludes>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>assembly</directory>
+            <includes>
+                <include>initial.sh</include>
+            </includes>
+			<!--设置文件权限为可读可写可执行-->
+            <fileMode>0777</fileMode>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+	<!--将Maven依赖的jar包都输出到lib目录-->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+</assembly>
+</textarea>
+<hr/>
+<h3>maven-antrun-plugin</h3>
+利用此插件(a href="http://maven.apache.org/plugins/maven-antrun-plugin/" target="_blank">官网</a>)可以在Maven的lifecycle中调用ant tasks，譬如文件操作，命令行调用等，相当实用。示例如下：<br/>
+<textarea rows=40>
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-antrun-plugin</artifactId>
+	<version>1.8</version>
+	<executions>
+		<execution>
+			<id>cleanImportAssembly</id>
+			<phase>clean</phase>
+			<configuration>
+				<target name="clear assembly">
+					<!--failonerror设置为true，在找不到该删除目标时不会报错fail-->
+					<delete failonerror="false">
+						<fileset dir="${assembly.directory}\import\" />
+					</delete>
+				</target>
+			</configuration>
+			<goals>
+				<goal>run</goal>
+			</goals>
+		</execution>
+		<execution>
+			<phase>package</phase>
+			<configuration>
+				<target name="update assembly">
+					<echo message="Begin to update assembly sources." />
+					<copy todir="${assembly.directory}\import">
+						<fileset dir="${project.build.outputDirectory}">
+							<include name="jdbc.properties" />
+							<include name="user-import.properties" />
+						</fileset>
+						<fileset dir="${project.build.directory}">
+							<include name="*.jar" />
+						</fileset>
+					</copy>
+				</target>
+			</configuration>
+			<goals>
+				<goal>run</goal>
+			</goals>
+		</execution>
+	</executions>
+</plugin>
+</textarea>
+<hr/>
+<h3>maven-antrun-plugin</h3>
+该扩展在打包可执行jar文件时尤其有用，譬如这个例子指定了jar包运行时所需要的外部lib路径并将其jar所在位置也加入到了classpath中。
+<textarea rows=21>
+<!-- add the lib dependencies into manifest while package -->
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-jar-plugin</artifactId>
+	<configuration>
+		<archive>
+			<manifest>
+				<addClasspath>true</addClasspath>
+				<classpathPrefix>../lib/</classpathPrefix>
+			</manifest>
+			<manifestEntries>
+				<!--将jar文件所在位置也加入classpath-->
+				<Class-Path>.</Class-Path>
+			</manifestEntries>
+		</archive>
+		<excludes>
+			<exclude>jdbc.properties</exclude>
+			<exclude>user-*port.properties</exclude>
+		</excludes>
+	</configuration>
+</plugin>
+</textarea>
