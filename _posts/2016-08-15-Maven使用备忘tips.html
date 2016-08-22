@@ -85,7 +85,7 @@ Maven在META-INF/plexus/components.xml文件中定义了三个生命周期：
 <h3>maven-assembly-plugin</h3>
 Maven-assembly-plugin(<a href="http://maven.apache.org/plugins/maven-assembly-plugin/" target="_blank">官网</a>)这个插件通常用来做打包相关的工作，这里附上一个自己的使用场景：<br/>
 pom.xml<br/>
-<textarea rows=17>
+<textarea rows=19>
 <plugin>
 	<artifactId>maven-assembly-plugin</artifactId>
 	<configuration>
@@ -107,7 +107,7 @@ pom.xml<br/>
 </plugin>
 </textarea>
 package.xml<br/>
-<textarea rows=35>
+<textarea rows=37>
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3
@@ -148,8 +148,8 @@ package.xml<br/>
 </textarea>
 <hr/>
 <h3>maven-antrun-plugin</h3>
-利用此插件(a href="http://maven.apache.org/plugins/maven-antrun-plugin/" target="_blank">官网</a>)可以在Maven的lifecycle中调用ant tasks，譬如文件操作，命令行调用等，相当实用。示例如下：<br/>
-<textarea rows=40>
+利用此插件(<a href="http://maven.apache.org/plugins/maven-antrun-plugin/" target="_blank">官网</a>)可以在Maven的lifecycle中调用ant tasks，譬如文件操作，命令行调用等，相当实用。示例如下：<br/>
+<textarea rows=42>
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-antrun-plugin</artifactId>
@@ -219,3 +219,4 @@ package.xml<br/>
 	</configuration>
 </plugin>
 </textarea>
+附：<a href="https://ant.apache.org/manual/index.html" target="_blank">Apache Ant Tasks</a>
