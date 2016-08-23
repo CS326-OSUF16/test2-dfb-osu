@@ -1,0 +1,106 @@
+---
+layout: default
+title: Maven从wsdl文件自动生成Java代码
+tags: Maven Java WSDL
+---
+首先从实例说起，最近看到项目Guideline中有同事写出一句代码从wsdl文件反向生成其Java代码：<br/>
+<pre class="commandline">
+mvn clean process-resources -Pgenerate-ws-client
+</pre>
+第一反应是，Maven的generate-ws-client这个profile内调用了什么插件做到这件事的呢？<br/>
+<p>于是调查项目的pom.xml，发现并没有什么出奇：</p>
+<textarea rows=61>
+<profiles>
+	<profile>
+		<id>generate-ws-client</id>
+		<build>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>unpack</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>unpack-dependencies</goal>
+							</goals>
+							<configuration>
+								<includeGroupIds>com.ericsson.sep.msdp.boss.sia</includeGroupIds>
+								<includeArtifactIds>sia-framework</includeArtifactIds>
+								<excludeTransitive>true</excludeTransitive>
+								<outputDirectory>${basedir}/target/framework-resources</outputDirectory>
+								<includes>**/wsdl2java.xml,**/asyncBinding.xml,**/serializableBinding.xml</includes>
+								<overWriteReleases>true</overWriteReleases>
+								<overWriteSnapshots>true</overWriteSnapshots>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.8</version>
+					<executions>
+						<execution>
+							<id>generate-beans</id>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<target>
+									<ant antfile="${basedir}/target/framework-resources/com/ericsson/sep/msdp/boss/sia/framework/ws/ant/wsdl2java.xml"/>
+								</target>
+							</configuration>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>ant-contrib</groupId>
+							<artifactId>ant-contrib</artifactId>
+							<version>1.0b3</version>
+							<exclusions>
+								<exclusion>
+									<artifactId>ant</artifactId>
+									<groupId>ant</groupId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+</profiles>
+</textarea>
+<p>其中有一句<i>ant antfile="${basedir}/target/framework-resources/com/ericsson/sep/msdp/boss/sia/framework/ws/ant/wsdl2java.xml"</i>值得怀疑，这里调用了maven-antrun-plugin进行了命令行执行，继续追踪到wsdl2java.xml查看，发现了重要内容：</p>
+<textarea rows=24>
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun" default="main">
+    <target name="main">
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+        <foreach param="fileName" target="unzipLibs" inheritall="true">
+            <path>
+                <fileset dir="${basedir}/src/main/resources/wsdl/" casesensitive="yes">
+                    <include name="*.wsdl"/>
+                </fileset>
+            </path>
+        </foreach>
+    </target>
+    <target name="unzipLibs">
+        <property name="ws-client-dir"
+                  value="${basedir}/src/main/wsdl2java"/>
+        <property name="ws-client-class-dir"
+                  value="${basedir}/target"/>
+        <property name="async-binding"
+                  value="${basedir}/target/framework-resources/com/ericsson/sep/msdp/boss/sia/framework/ws/binding/asyncBinding.xml"/>
+        <property name="serializable-binding"
+                  value="${basedir}/target/framework-resources/com/ericsson/sep/msdp/boss/sia/framework/ws/binding/serializableBinding.xml"/>
+        <exec executable="wsimport">
+            <arg line="-s ${ws-client-dir} -d ${ws-client-class-dir} -keep ${fileName} -b ${async-binding} -b ${serializable-binding} -verbose"/>
+        </exec>
+    </target>
+</project>
+</textarea>
+<p>可见这里是调用了jdk自带的<b>wsimport</b>来根据服务端生成的WSDL文件创建客户端支持代码，到这里就可以一目了然了。</p>
