@@ -26,13 +26,14 @@ INPUT {FONT-SIZE: 8pt; FONT-FAMILY: "Microsoft Yahei";background-color:transpare
 
 textarea {
 	border:1px dotted #DEDBEF;
-	background-color:transparent;
+	background-color:rgb(235, 235, 228);/*transparent;*/
 	font-size:9pt;
 	font-family:"Microsoft Yahei";
+	resize:none;
+	width:50%;
 	/*overflow-y: hidden;
 	overflow-x: hidden;*/
 }
-
 
 .commandline {
 	color:#00FF00;
